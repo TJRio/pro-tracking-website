@@ -1,4 +1,4 @@
-// This is the complete and correct script.js file.
+// This is the complete and final script.js file with all features.
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const trackingNumber = trackingInput.value.trim();
             if (trackingNumber) {
                 localStorage.setItem('trackingNumberToSearch', trackingNumber);
-                window.location.href = 'tracking.html';
+                window.location.href = `tracking.html?id=${trackingNumber}`;
             } else {
                 alert('Please enter a valid tracking number.');
             }
@@ -34,10 +34,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Tracking Results Page Logic ---
     const resultsContainer = document.getElementById('tracking-results-container');
     if (resultsContainer) {
-        const trackingNumber = localStorage.getItem('trackingNumberToSearch');
+        // Create a URL object from the current page's URL
+        const urlParams = new URLSearchParams(window.location.search);
+        // Try to get the tracking ID from the URL (e.g., from ?id=PKG-123)
+        const trackingIdFromUrl = urlParams.get('id');
+        // Fallback to getting it from localStorage (old method, for safety)
+        const trackingIdFromStorage = localStorage.getItem('trackingNumberToSearch');
+
+        // Decide which tracking number to use: URL is priority
+        const trackingNumber = trackingIdFromUrl || trackingIdFromStorage;
+
         if (trackingNumber) {
+            // Clear storage so it doesn't interfere with future link clicks
+            localStorage.removeItem('trackingNumberToSearch'); 
             fetchTrackingData(trackingNumber);
         } else {
+            // If no ID is found in the URL or storage, show an error.
             showError();
         }
     }
@@ -72,26 +84,23 @@ document.addEventListener('DOMContentLoaded', function() {
         if (status.includes('delivered') || status.includes('completed')) progress = 100;
         
         const historyEvents = data.History.split('|').map(item => item.trim());
-const currentStatusIndex = historyEvents.findIndex(event => data.StatusText.includes(event.split(',')[0])); // Find index of current status
+        const currentStatusIndex = historyEvents.findIndex(event => data.StatusText.toLowerCase().includes(event.split(',')[0].toLowerCase()));
 
-const historyItems = historyEvents.map((item, index) => {
-    let stateClass = 'incomplete'; // Default to incomplete
-    if (index < currentStatusIndex) {
-        stateClass = 'completed';
-    } else if (index === currentStatusIndex) {
-        stateClass = 'active';
-    }
-
-    // Add a checkmark to completed items
-    const iconContent = (stateClass === 'completed') ? '<i class="bi bi-check"></i>' : '';
-
-    return `
-        <li class="timeline-item ${stateClass}">
-            <div class="timeline-icon">${iconContent}</div>
-            <div class="timeline-body">${item}</div>
-        </li>
-    `;
-}).join('');
+        const historyItems = historyEvents.map((item, index) => {
+            let stateClass = 'incomplete';
+            if (index < currentStatusIndex) {
+                stateClass = 'completed';
+            } else if (index === currentStatusIndex) {
+                stateClass = 'active';
+            }
+            const iconContent = (stateClass === 'completed') ? '<i class="bi bi-check"></i>' : '';
+            return `
+                <li class="timeline-item ${stateClass}">
+                    <div class="timeline-icon">${iconContent}</div>
+                    <div class="timeline-body">${item}</div>
+                </li>
+            `;
+        }).join('');
 
         const resultsHTML = `
             <div class="card shadow-lg">
@@ -130,7 +139,6 @@ const historyItems = historyEvents.map((item, index) => {
         loadingSpinner.classList.add('d-none');
         resultsContent.classList.remove('d-none');
         
-        // Pass the entire data object to the map function
         initializeMap(data);
     }
 
