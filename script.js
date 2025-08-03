@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (status.includes('delivered') || status.includes('completed')) progress = 100;
         
         const historyEvents = data.History.split('|').map(item => item.trim());
-        const currentStatusIndex = historyEvents.findIndex(event => data.StatusText.toLowerCase().includes(event.split(',')[0].toLowerCase()));
+        const currentStatusIndex = historyEvents.findIndex(event => event.toLowerCase() === data.StatusText.toLowerCase());
 
         const historyItems = historyEvents.map((item, index) => {
             let stateClass = 'incomplete';
