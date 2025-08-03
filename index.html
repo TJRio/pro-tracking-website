@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwiftShip Logistics - Fast, Reliable, Global</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header & Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <!-- LOGO PLACEMENT -->
+                <img src="assets/img/logo.png" alt="SwiftShip Logistics Logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+                    <li class="nav-item"><a class="nav-link btn btn-primary text-white ms-lg-2 px-3" href="tracking.html">Track Package</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section text-white text-center d-flex align-items-center">
+        <div class="container">
+            <h1 class="display-3 fw-bolder animate-on-scroll">Your Bridge to Global Commerce</h1>
+            <p class="lead mb-4 fw-light animate-on-scroll">Seamlessly track your shipments in real-time. Enter your tracking number to begin.</p>
+            <form id="trackingForm" class="row g-3 justify-content-center animate-on-scroll">
+                <div class="col-md-5 col-10">
+                    <input type="text" class="form-control form-control-lg" id="trackingInput" placeholder="e.g., PKG-TEST-001" required>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary btn-lg fw-bold px-4">Track Now</button>
+                </div>
+            </form>
+        </div>
+    </header>
+
+    <main>
+        <!-- Features Section -->
+        <section class="features-section py-5">
+            <div class="container text-center">
+                <h2 class="mb-5 section-title animate-on-scroll">Why Choose Us?</h2>
+                <div class="row">
+                    <div class="col-md-4 mb-4 animate-on-scroll">
+                        <div class="feature-card h-100 p-4">
+                            <i class="bi bi-globe-americas display-3 text-primary"></i>
+                            <h3 class="card-title mt-3 h4">Global Reach</h3>
+                            <p class="card-text">We deliver to over 220 countries and territories, connecting your business to the world.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4 animate-on-scroll">
+                        <div class="feature-card h-100 p-4">
+                            <i class="bi bi-shield-check display-3 text-primary"></i>
+                            <h3 class="card-title mt-3 h4">Secure & Reliable</h3>
+                            <p class="card-text">Your packages are handled with the utmost care and security, ensuring they arrive safely.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4 animate-on-scroll">
+                        <div class="feature-card h-100 p-4">
+                            <i class="bi bi-clock-history display-3 text-primary"></i>
+                            <h3 class="card-title mt-3 h4">Live Updates</h3>
+                            <p class="card-text">Stay informed from pickup to delivery with our state-of-the-art live tracking system.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works-section py-5">
+            <div class="container">
+                <h2 class="text-center mb-5 section-title animate-on-scroll">Our Simple 3-Step Process</h2>
+                <div class="row text-center align-items-center">
+                    <div class="col-md-3 mb-4 animate-on-scroll">
+                        <div class="p-3">
+                            <div class="step-icon">1</div>
+                            <h4 class="mt-4">Book Your Shipment</h4>
+                            <p class="text-muted">Easily create a shipment online. We'll handle the logistics from start to finish.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-1 d-none d-md-block text-center animate-on-scroll">
+                        <i class="bi bi-chevron-right display-4 text-muted"></i>
+                    </div>
+                    <div class="col-md-4 mb-4 animate-on-scroll">
+                         <div class="p-3">
+                            <div class="step-icon">2</div>
+                            <h4 class="mt-4">Track in Real-Time</h4>
+                            <p class="text-muted">Use your unique tracking number to monitor your package's journey every step of the way.</p>
+                        </div>
+                    </div>
+                     <div class="col-md-1 d-none d-md-block text-center animate-on-scroll">
+                        <i class="bi bi-chevron-right display-4 text-muted"></i>
+                    </div>
+                    <div class="col-md-3 mb-4 animate-on-scroll">
+                         <div class="p-3">
+                            <div class="step-icon">3</div>
+                            <h4 class="mt-4">Receive Securely</h4>
+                            <p class="text-muted">Get automated notifications and receive your shipment on time, every time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials-section py-5">
+            <div class="container">
+                <h2 class="text-center mb-5 section-title animate-on-scroll">What Our Clients Say</h2>
+                <div class="row">
+                    <div class="col-lg-6 mx-auto animate-on-scroll">
+                        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="testimonial-card">
+                                        <img src="assets/img/testimonial-1.jpg" class="testimonial-img" alt="Client Testimonial 1">
+                                        <p class="fst-italic mt-3">"SwiftShip has transformed our international shipping. The real-time tracking is incredibly accurate and gives us peace of mind."</p>
+                                        <footer class="blockquote-footer mt-2">Jane Doe, <cite>E-commerce Manager</cite></footer>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="testimonial-card">
+                                        <img src="assets/img/testimonial-2.jpg" class="testimonial-img" alt="Client Testimonial 2">
+                                        <p class="fst-italic mt-3">"The reliability and customer service are second to none. I highly recommend SwiftShip for any business needing logistics."</p>
+                                        <footer class="blockquote-footer mt-2">John Smith, <cite>Operations Director</cite></footer>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section class="py-5 cta-section">
+    <div class="container d-flex justify-content-center align-items-center">
+        <div class="cta-content-box text-center animate-on-scroll">
+            <h2 class="display-5 fw-bold">Ready to Ship with Confidence?</h2>
+            <p class="lead">Let us handle your logistics, so you can focus on growing your business.</p>
+            <a href="contact.html" class="mt-3 cta-button">Get a Free Quote</a>
+        </div>
+    </div>
+</section>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="site-footer pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row">
+                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold"><img src="assets/img/logo.png" alt="SwiftShip Logistics Logo"> SwiftShip Logistics</h6>
+                    <hr class="mb-4 mt-2 hr-primary"/>
+                    <p>Your trusted partner in global logistics. We provide fast, secure, and reliable shipping solutions tailored to your needs.</p>
+                </div>
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                    <h6 class="text-uppercase fw-bold">Quick Links</h6>
+                    <hr class="mb-4 mt-2 hr-primary"/>
+                    <p><a href="about.html" class="footer-link">About Us</a></p>
+                    <p><a href="services.html" class="footer-link">Services</a></p>
+                    <p><a href="tracking.html" class="footer-link">Track a Package</a></p>
+                    <p><a href="contact.html" class="footer-link">Contact Us</a></p>
+                </div>
+                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                    <h6 class="text-uppercase fw-bold">Contact</h6>
+                    <hr class="mb-4 mt-2 hr-primary"/>
+                    <p><i class="bi bi-geo-alt-fill me-3"></i> 123 Logistics Lane, New York, NY</p>
+                    <p><i class="bi bi-envelope-fill me-3"></i>swiftship.logistics01@gmail.com</p>
+                    <p><i class="bi bi-telephone-fill me-3"></i> + 01 234 567 88</p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright-bar text-center p-3 mt-4">
+            © 2025 Copyright:
+            <a class="text-white text-decoration-none fw-bold" href="index.html">SwiftShipLogistics.com</a>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
