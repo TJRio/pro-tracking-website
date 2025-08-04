@@ -2,7 +2,7 @@
 
 // --- CONFIGURATION ---
 // !!! PASTE YOUR FINAL, PERMANENT GOOGLE SCRIPT WEB APP URL HERE !!!
-const webAppUrl = 'YOUR_FINAL_PERMANENT_WEB_APP_URL';
+const webAppUrl = 'https://script.google.com/macros/s/AKfycbzJv9ZKGeKXCkBdou9QEE3ZL4mhr3_n-oi1xlVThEdKJ2trFEMsvMb5Sai2oRbwPEu0pQ/exec';
 
 // --- ELEMENT SELECTORS ---
 const loginSection = document.getElementById('loginSection');
