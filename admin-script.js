@@ -1,73 +1,47 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const loginForm = document.getElementById('loginForm');
-  const loginButton = document.getElementById('loginButton');
-  const responseMessage = document.getElementById('responseMessage');
-  const loginSection = document.getElementById('loginSection');
-  const updateSection = document.getElementById('updateSection');
+    const loginForm = document.getElementById('loginForm');
+    const loginButton = document.getElementById('loginButton');
+    const responseMessage = document.getElementById('responseMessage');
+    const loginSection = document.getElementById('loginSection');
+    const updateSection = document.getElementById('updateSection');
 
-  let failureTimeout;
+    let failureTimeout;
 
-  // --- LOGIN FORM SUBMISSION ---
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault(); // Prevent default form submission
-    
-    loginButton.disabled = true;
-    loginButton.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Verifying...`;
-    responseMessage.className = '';
-    responseMessage.textContent = '';
+    // --- LOGIN FORM SUBMISSION ---
+    loginForm.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent the default form submission action
+        loginButton.disabled = true;
+        loginButton.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Verifying...`;
+        responseMessage.className = '';
+        responseMessage.textContent = '';
 
-    // Set a timeout. If we don't receive any message from the iframe within 15 seconds, the login has failed.
-    failureTimeout = setTimeout(() => {
-      responseMessage.className = 'alert alert-danger mt-3';
-      responseMessage.textContent = 'Login failed. Please check your credentials and try again.';
-      loginButton.disabled = false;
-      loginButton.innerHTML = 'Login';
-    }, 15000);
+        // Set a timeout. If we don't receive a "login_success" message
+        // from the iframe within 15 seconds, the login has failed.
+        failureTimeout = setTimeout(() => {
+            responseMessage.className = 'alert alert-danger mt-3';
+            responseMessage.textContent = 'Login failed. Please check your credentials and try again.';
+            loginButton.disabled = false;
+            loginButton.innerHTML = 'Login';
+        }, 15000);
 
-    // Submit the form data manually
-    const formData = new FormData(loginForm);
-    fetch(loginForm.action, {
-      method: 'POST',
-      body: formData
-    })
-    .catch(error => {
-      clearTimeout(failureTimeout);
-      responseMessage.className = 'alert alert-danger mt-3';
-      responseMessage.textContent = 'Network error. Please try again.';
-      loginButton.disabled = false;
-      loginButton.innerHTML = 'Login';
+        // Submit login script
+        loginForm.submit();
     });
-  });
 
-  // --- MESSAGE EVENT LISTENER ---
-  window.addEventListener('message', (event) => {
-    // We check if the message is the one we're expecting from our script.
-    if (event.data === 'login_success') {
-      // --- SUCCESS CASE ---
-      clearTimeout(failureTimeout); // Stop the failure timeout.
+    // --- MESSAGE EVENT LISTENER ---
+    window.addEventListener('message', (event) => {
+        if (event.data === 'login_success') {
+            // --- SUCCESS CASE ---
+            clearTimeout(failureTimeout); // Stop the failure timeout.
 
-      responseMessage.className = 'alert alert-success mt-3';
-      responseMessage.textContent = 'Login Successful! Loading dashboard...';
+            responseMessage.className = 'alert alert-success mt-3';
+            responseMessage.textContent = 'Login Successful! Loading dashboard...';
 
-      // Switch panels.
-      setTimeout(() => {
-        loginSection.classList.add('d-none');
-        updateSection.classList.remove('d-none');
-      }, 1000);
-    } else if (event.data === 'login_failed') {
-      // --- FAILURE CASE ---
-      clearTimeout(failureTimeout);
-      responseMessage.className = 'alert alert-danger mt-3';
-      responseMessage.textContent = 'Login failed. Please check your credentials and try again.';
-      loginButton.disabled = false;
-      loginButton.innerHTML = 'Login';
-    } else if (event.data === 'login_error') {
-      // --- ERROR CASE ---
-      clearTimeout(failureTimeout);
-      responseMessage.className = 'alert alert-danger mt-3';
-      responseMessage.textContent = 'An error occurred. Please try again.';
-      loginButton.disabled = false;
-      loginButton.innerHTML = 'Login';
-    }
-  });
+            // Switch panels.
+            setTimeout(() => {
+                loginSection.classList.add('d-none');
+                updateSection.classList.remove('d-none');
+            }, 1000);
+        }
+    });
 });
