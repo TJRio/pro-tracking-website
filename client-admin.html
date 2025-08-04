@@ -11,28 +11,20 @@
     <div class="container">
         <div class="row min-vh-100 justify-content-center align-items-center">
             <div class="col-md-5">
-                <!-- LOGIN FORM -->
+                <!-- LOGIN FORM (Visible by default) -->
                 <div id="loginSection" class="card shadow-lg">
                     <div class="card-header bg-dark text-white text-center py-3">
                         <h3 class="mb-0">Admin Panel Login</h3>
                     </div>
                     <div class="card-body p-4">
-                        <!-- THIS IS THE NEW FORM SETUP -->
-                        <form id="loginForm"
-                              action="https://script.google.com/macros/s/AKfycbzJv9ZKGeKXCkBdou9QEE3ZL4mhr3_n-oi1xlVThEdKJ2trFEMsvMb5Sai2oRbwPEu0pQ/exec"
-                              method="POST"
-                              target="hidden_iframe">
-                            
-                            <!-- Hidden input to tell the script what action to perform -->
-                            <input type="hidden" name="action" value="login">
-
+                        <form id="loginForm">
                             <div class="mb-3">
                                 <label for="email" class="form-label fw-bold">Email Address</label>
-                                <input type="email" class="form-control form-control-lg" id="email" name="email" required>
+                                <input type="email" class="form-control form-control-lg" id="email" required>
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label fw-bold">Password</label>
-                                <input type="password" class="form-control form-control-lg" id="password" name="password" required>
+                                <input type="password" class="form-control form-control-lg" id="password" required>
                             </div>
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-primary btn-lg" id="loginButton">Login</button>
@@ -42,17 +34,19 @@
                     </div>
                 </div>
 
-                <!-- THE UPDATE PANEL WILL GO HERE LATER -->
+                <!-- UPDATE PANEL (Hidden by default, will be shown after successful login) -->
                 <div id="updateSection" class="card shadow-lg d-none">
-                    <!-- ... Update form will be here ... -->
+                    <div class="card-header bg-dark text-white">
+                        <h3>Update Package Status</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <!-- The update form will be built here in the next step -->
+                        <p>Welcome, Admin! The update form will appear here.</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- This is the hidden iframe that will handle the form submission -->
-    <iframe name="hidden_iframe" id="hidden_iframe" style="display: none;"></iframe>
-
     <script src="admin-script.js"></script>
 </body>
 </html>
