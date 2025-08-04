@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- ELEMENT SELECTORS ---
     const loginForm = document.getElementById('loginForm');
     const loginButton = document.getElementById('loginButton');
     const responseMessage = document.getElementById('responseMessage');
@@ -6,30 +7,41 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginSection = document.getElementById('loginSection');
     const updateSection = document.getElementById('updateSection');
 
+    // --- THE "GATEKEEPER" VARIABLE ---
+    // This is the most important part. It prevents the initial iframe load from logging in.
+    let hasFormBeenSubmitted = false;
+
     let formSubmitTimeout;
 
-    // Listen for when the user clicks the "Login" button.
+    // --- LOGIN FORM SUBMISSION LOGIC ---
     loginForm.addEventListener('submit', () => {
+        // When the user clicks login, we set the gatekeeper to true.
+        hasFormBeenSubmitted = true;
+
         loginButton.disabled = true;
         loginButton.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Verifying...`;
         responseMessage.className = '';
         responseMessage.textContent = '';
 
-        // Set a timeout. If the iframe doesn't successfully load (redirect)
-        // within 15 seconds, we know the login failed.
+        // Set the failure timeout.
         formSubmitTimeout = setTimeout(() => {
             responseMessage.className = 'alert alert-danger mt-3';
             responseMessage.textContent = 'Login failed. Please check your credentials and try again.';
             loginButton.disabled = false;
             loginButton.innerHTML = 'Login';
+            hasFormBeenSubmitted = false; // Reset the gate on failure
         }, 15000);
     });
 
-    // Listen for when the hidden iframe has finished loading its content.
-    // This will now ONLY fire if the Google Script performs a successful redirect.
+    // --- IFRAME LOAD EVENT LISTENER ---
     hiddenIframe.addEventListener('load', () => {
-        // Since a load event can only happen on success, we don't need a gatekeeper.
-        // We can immediately proceed.
+        // This is the crucial check:
+        // ONLY proceed if the user has actually submitted the form.
+        if (!hasFormBeenSubmitted) {
+            return; // Ignore the initial "phantom load" of the iframe.
+        }
+
+        // If we get here, it means a REAL submission was successful.
         clearTimeout(formSubmitTimeout); // Stop the failure timeout.
 
         responseMessage.className = 'alert alert-success mt-3';
@@ -39,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             loginSection.classList.add('d-none');
             updateSection.classList.remove('d-none');
+            // We will build the update form here.
         }, 1000);
     });
 });
