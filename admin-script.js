@@ -6,49 +6,39 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginSection = document.getElementById('loginSection');
     const updateSection = document.getElementById('updateSection');
 
-    let hasFormBeenSubmitted = false;
+    let formSubmitTimeout;
 
+    // Listen for when the user clicks the "Login" button.
     loginForm.addEventListener('submit', () => {
-        hasFormBeenSubmitted = true;
         loginButton.disabled = true;
         loginButton.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Verifying...`;
         responseMessage.className = '';
         responseMessage.textContent = '';
-    });
 
-    // This event fires whenever the iframe finishes loading content.
-    hiddenIframe.addEventListener('load', () => {
-        // Ignore the initial "phantom load" of the page.
-        if (!hasFormBeenSubmitted) {
-            return;
-        }
-
-        try {
-            // --- THE KEY LOGIC ---
-            // Try to read the content of the iframe.
-            const iframeContent = hiddenIframe.contentDocument.body.textContent;
-
-            if (iframeContent.includes("Success")) {
-                // --- SUCCESS CASE ---
-                responseMessage.className = 'alert alert-success mt-3';
-                responseMessage.textContent = 'Login Successful! Loading dashboard...';
-                setTimeout(() => {
-                    loginSection.classList.add('d-none');
-                    updateSection.classList.remove('d-none');
-                }, 1000);
-
-            } else {
-                // --- FAILURE CASE ---
-                // If the content is "Failure" or anything else, show an error.
-                throw new Error("Login failed. Please check your credentials.");
-            }
-        } catch (e) {
-            // This catch block handles both thrown errors and security errors if the iframe redirect fails.
+        // Set a timeout. If the iframe doesn't successfully load (redirect)
+        // within 15 seconds, we know the login failed.
+        formSubmitTimeout = setTimeout(() => {
             responseMessage.className = 'alert alert-danger mt-3';
-            responseMessage.textContent = "Login failed. Please check your credentials and try again.";
+            responseMessage.textContent = 'Login failed. Please check your credentials and try again.';
             loginButton.disabled = false;
             loginButton.innerHTML = 'Login';
-            hasFormBeenSubmitted = false; // Reset the gate
-        }
+        }, 15000);
+    });
+
+    // Listen for when the hidden iframe has finished loading its content.
+    // This will now ONLY fire if the Google Script performs a successful redirect.
+    hiddenIframe.addEventListener('load', () => {
+        // Since a load event can only happen on success, we don't need a gatekeeper.
+        // We can immediately proceed.
+        clearTimeout(formSubmitTimeout); // Stop the failure timeout.
+
+        responseMessage.className = 'alert alert-success mt-3';
+        responseMessage.textContent = 'Login Successful! Loading dashboard...';
+
+        // Switch panels.
+        setTimeout(() => {
+            loginSection.classList.add('d-none');
+            updateSection.classList.remove('d-none');
+        }, 1000);
     });
 });
