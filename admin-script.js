@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- LOGIN FORM SUBMISSION ---
     loginForm.addEventListener('submit', (event) => {
-        event.preventDefault(); // Prevent the default form submission action
+        event.preventDefault(); // Prevent default form submission
         loginButton.disabled = true;
         loginButton.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Verifying...`;
         responseMessage.className = '';
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
             loginButton.innerHTML = 'Login';
         }, 15000);
 
-        // Submit login script
+        // Submit the form (targeting the hidden iframe)
         loginForm.submit();
     });
 
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             responseMessage.className = 'alert alert-success mt-3';
             responseMessage.textContent = 'Login Successful! Loading dashboard...';
 
-            // Switch panels.
+            // Switch panels after a short delay.
             setTimeout(() => {
                 loginSection.classList.add('d-none');
                 updateSection.classList.remove('d-none');
