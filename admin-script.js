@@ -2,44 +2,45 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const loginButton = document.getElementById('loginButton');
     const responseMessage = document.getElementById('responseMessage');
-    const hiddenIframe = document.getElementById('hidden_iframe');
     const loginSection = document.getElementById('loginSection');
     const updateSection = document.getElementById('updateSection');
 
-    let hasFormBeenSubmitted = false;
+    let failureTimeout;
 
+    // --- LOGIN FORM SUBMISSION ---
     loginForm.addEventListener('submit', () => {
-        hasFormBeenSubmitted = true;
         loginButton.disabled = true;
         loginButton.innerHTML = `<span class="spinner-border spinner-border-sm"></span> Verifying...`;
         responseMessage.className = '';
         responseMessage.textContent = '';
 
-        setTimeout(() => {
-            if (hasFormBeenSubmitted) { // Check if we are still waiting
-                responseMessage.className = 'alert alert-danger mt-3';
-                responseMessage.textContent = 'Login failed. Please check your credentials and try again.';
-                loginButton.disabled = false;
-                loginButton.innerHTML = 'Login';
-                hasFormBeenSubmitted = false; // Reset the gate
-            }
+        // Set a timeout. If we don't receive a "login_success" message
+        // from the iframe within 15 seconds, the login has failed.
+        failureTimeout = setTimeout(() => {
+            responseMessage.className = 'alert alert-danger mt-3';
+            responseMessage.textContent = 'Login failed. Please check your credentials and try again.';
+            loginButton.disabled = false;
+            loginButton.innerHTML = 'Login';
         }, 15000);
     });
 
-    hiddenIframe.addEventListener('load', () => {
-        if (!hasFormBeenSubmitted) {
-            return;
+    // --- MESSAGE EVENT LISTENER ---
+    // This listens for messages sent from ANY iframe on the page.
+    window.addEventListener('message', (event) => {
+        // We check if the message is the one we're expecting from our script.
+        if (event.data === 'login_success') {
+            
+            // --- SUCCESS CASE ---
+            clearTimeout(failureTimeout); // Stop the failure timeout.
+
+            responseMessage.className = 'alert alert-success mt-3';
+            responseMessage.textContent = 'Login Successful! Loading dashboard...';
+
+            // Switch panels.
+            setTimeout(() => {
+                loginSection.classList.add('d-none');
+                updateSection.classList.remove('d-none');
+            }, 1000);
         }
-
-        clearTimeout(); // This is not needed, the logic is simpler
-        responseMessage.className = 'alert alert-success mt-3';
-        responseMessage.textContent = 'Login Successful! Loading dashboard...';
-
-        setTimeout(() => {
-            loginSection.classList.add('d-none');
-            updateSection.classList.remove('d-none');
-        }, 1000);
-        
-        hasFormBeenSubmitted = false; // Reset the gate after success
     });
 });
