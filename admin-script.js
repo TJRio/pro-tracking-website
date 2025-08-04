@@ -1,74 +1,58 @@
-// This is the complete admin-script.js file with the no-cors workaround for login.
+// This script uses the hidden iframe method, which is a robust workaround for Google Apps Script fetch/CORS issues.
 
-// --- CONFIGURATION ---
-// !!! PASTE YOUR FINAL, PERMANENT GOOGLE SCRIPT WEB APP URL HERE !!!
-const webAppUrl = 'https://script.google.com/macros/s/AKfycbzJv9ZKGeKXCkBdou9QEE3ZL4mhr3_n-oi1xlVThEdKJ2trFEMsvMb5Sai2oRbwPEu0pQ/exec';
+document.addEventListener('DOMContentLoaded', () => {
 
-// --- ELEMENT SELECTORS ---
-const loginSection = document.getElementById('loginSection');
-const updateSection = document.getElementById('updateSection');
-const loginForm = document.getElementById('loginForm');
-const adminForm = document.getElementById('adminForm');
-const loginButton = document.getElementById('loginButton');
-const updateButton = document.getElementById('updateButton');
-const loginResponseMessage = document.getElementById('loginResponseMessage');
-const updateResponseMessage = document.getElementById('updateResponseMessage');
+    // --- ELEMENT SELECTORS ---
+    const loginForm = document.getElementById('loginForm');
+    const loginButton = document.getElementById('loginButton');
+    const responseMessage = document.getElementById('responseMessage');
+    const hiddenIframe = document.getElementById('hidden_iframe');
+    const loginSection = document.getElementById('loginSection');
+    const updateSection = document.getElementById('updateSection');
 
-// --- LOGIN LOGIC with 'no-cors' workaround ---
-loginForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    setLoadingState(loginButton, true, 'Verifying...');
-    loginResponseMessage.className = '';
-    loginResponseMessage.textContent = '';
+    // Variable to hold our timeout function
+    let formSubmitTimeout;
 
-    const loginData = {
-        action: 'login',
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value
-    };
+    // --- LOGIN FORM SUBMISSION LOGIC ---
+    // This event fires when the user clicks the "Login" button.
+    loginForm.addEventListener('submit', () => {
+        // 1. Show a loading state to the user.
+        loginButton.disabled = true;
+        loginButton.textContent = 'Verifying...';
+        responseMessage.className = ''; // Clear previous message styles
+        responseMessage.textContent = ''; // Clear previous message text
 
-    // The 'no-cors' mode sends the request but doesn't wait for a readable response.
-    // This is a common workaround for stubborn Google Apps Script CORS/redirect issues.
-    fetch(webAppUrl, {
-        method: 'POST',
-        mode: 'no-cors', // This is the key change.
-        cache: 'no-cache',
-        headers: { 'Content-Type': 'application/json' },
-        redirect: 'follow',
-        body: JSON.stringify(loginData)
-    })
-    .then(response => {
-        // In 'no-cors' mode, we can't read the response body.
-        // We assume the request was sent successfully and proceed immediately.
-        console.log("Login request sent. Assuming success.");
-        
-        // Hide the login form and show the update form.
-        loginSection.classList.add('d-none');
-        updateSection.classList.remove('d-none');
-    })
-    .catch(error => {
-        // This will now only catch very early network errors (e.g., no internet connection).
-        setResponseMessage(loginResponseMessage, 'danger', 'A critical network error occurred. Please check your connection.');
-        console.error('Critical Fetch Error:', error);
-        setLoadingState(loginButton, false, 'Login'); // Reset button only on critical error
+        // 2. Set a timeout as a "failure" condition.
+        // If the iframe doesn't load within 15 seconds, it means the login was incorrect
+        // because the Google Script didn't return a "success" response.
+        formSubmitTimeout = setTimeout(() => {
+            responseMessage.className = 'alert alert-danger mt-3';
+            responseMessage.textContent = 'Login failed. Please check your credentials and try again.';
+            
+            // Reset the button so the user can try again.
+            loginButton.disabled = false;
+            loginButton.textContent = 'Login';
+        }, 15000); // 15 seconds
+    });
+
+    // --- IFRAME LOAD EVENT LISTENER ---
+    // This event fires ONLY if the Google Script runs successfully and returns a response.
+    hiddenIframe.addEventListener('load', () => {
+        // 1. If the iframe loads, we know the login was successful. Clear the failure timeout.
+        clearTimeout(formSubmitTimeout);
+
+        // 2. Show a success message to the user.
+        responseMessage.className = 'alert alert-success mt-3';
+        responseMessage.textContent = 'Login Successful! Loading dashboard...';
+
+        // 3. Hide the login form and show the (currently empty) update panel after a short delay.
+        setTimeout(() => {
+            loginSection.classList.add('d-none');
+            updateSection.classList.remove('d-none');
+            
+            // In the next step of our project, we will add the code here
+            // to build the actual package update form inside the 'updateSection'.
+            
+        }, 1000); // Wait 1 second for the user to read the success message.
     });
 });
-
-// --- UPDATE LOGIC (to be built) ---
-// We will add the event listener for the adminForm in the next step.
-
-
-// --- HELPER FUNCTIONS ---
-function setLoadingState(button, isLoading, loadingText) {
-    const originalText = button.getAttribute('data-original-text') || button.textContent;
-    if (!button.getAttribute('data-original-text')) {
-        button.setAttribute('data-original-text', originalText);
-    }
-    button.disabled = isLoading;
-    button.textContent = isLoading ? loadingText : originalText;
-}
-
-function setResponseMessage(element, type, message) {
-    element.className = `alert alert-${type} mt-3`;
-    element.textContent = message;
-}
