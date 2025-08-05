@@ -35,23 +35,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- IFRAME LOAD EVENT LISTENER ---
     hiddenIframe.addEventListener('load', () => {
-        // This is the crucial check:
-        // ONLY do something if the gate is open (the user has submitted the form).
-        if (!hasFormBeenSubmitted) {
-            return; // Ignore the initial "phantom load" of the iframe.
-        }
+    try {
+        const iframeDoc = hiddenIframe.contentDocument || hiddenIframe.contentWindow.document;
+        const responseText = iframeDoc.body.textContent.trim();
 
-        // If we get here, it means a REAL submission was successful.
-        clearTimeout(formSubmitTimeout); // Stop the failure timeout.
-
-        responseMessage.className = 'alert alert-success mt-3';
-        responseMessage.textContent = 'Login Successful! Loading dashboard...';
-
-        // Switch panels.
-        setTimeout(() => {
-            loginSection.classList.add('d-none');
-            updateSection.classList.remove('d-none');
-            // We will build the update form here in the next step.
-        }, 1000);
-    });
+        if (responseText === "Success") {
+            clearTimeout(formSubmitTimeout);
+            responseMessage.className = 'alert alert-success mt-3';
+            responseMessage.textContent = 'Login Successful! Loading dashboard...';
+            setTimeout(() => {
+                loginSection.classList.add('d-none');
+                updateSection.classList.remove('d-none');
+            }, 1000);
+        } else {
+            clearTimeout(formSubmitTimeout);
+            responseMessage.className = 'alert alert-danger mt-3';
+            responseMessage.textContent = 'Login failed. Please check your credentials and try again.';
+            loginButton.disabled = false;
+            loginButton.innerHTML = 'Login';
+        }
+    } catch (error) {
+        clearTimeout(formSubmitTimeout);
+        responseMessage.className = 'alert alert-danger mt-3';
+        responseMessage.textContent = 'An error occurred. Please try again.';
+        loginButton.disabled = false;
+        loginButton.innerHTML = 'Login';
+    }
 });
