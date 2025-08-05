@@ -8,18 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let formSubmitTimeout;
 
     loginForm.addEventListener('submit', (e) => {
-        e.preventDefault(); // Prevent default form submission for debugging
+        e.preventDefault();
         loginButton.disabled = true;
         loginButton.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Verifying...`;
         responseMessage.className = '';
         responseMessage.textContent = '';
 
-        // Simulate form submission
         const formData = new FormData(loginForm);
         fetch(loginForm.action, {
             method: 'POST',
             body: formData,
-            mode: 'no-cors' // Temporary for testing
+            mode: 'no-cors'
         }).then(response => response.text())
           .then(text => {
               clearTimeout(formSubmitTimeout);
@@ -38,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   }
               } catch (error) {
                   responseMessage.className = 'alert alert-danger mt-3';
-                  responseMessage.textContent = 'An error occurred. Please try again. Response: ' + text;
+                  responseMessage.textContent = 'An error occurred. Please check the server URL and try again. Response: ' + text;
               }
               loginButton.disabled = false;
               loginButton.innerHTML = 'Login';
@@ -57,6 +56,4 @@ document.addEventListener('DOMContentLoaded', () => {
             loginButton.innerHTML = 'Login';
         }, 15000);
     });
-
-    // Remove iframe load event listener since we're using fetch
 });
