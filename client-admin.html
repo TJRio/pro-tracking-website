@@ -16,12 +16,11 @@
                     <div class="card-header bg-dark text-white text-center py-3"><h3 class="mb-0">Admin Panel Login</h3></div>
                     <div class="card-body p-4">
                         <form id="loginForm"
-                              action="https://script.google.com/macros/s/AKfycbyyjZrnG1M2IZ7JvJL7EItGRMt9Fbdxo-kyjJ2OmJXUp7_k1s4_eMdbO0SVFBgJc0k6eA/exec"
+                              action="YOUR_FINAL_STABLE_WEB_APP_URL"
                               method="POST"
                               target="hidden_iframe">
-                           
+                            
                             <input type="hidden" name="action" value="login">
-
                             <div class="mb-3">
                                 <label for="email" class="form-label fw-bold">Email</label>
                                 <input type="email" class="form-control form-control-lg" id="email" name="email" required>
@@ -37,7 +36,6 @@
                         <div id="responseMessage"></div>
                     </div>
                 </div>
-
                 <!-- UPDATE PANEL (Hidden) -->
                 <div id="updateSection" class="card shadow-lg d-none">
                     <div class="card-header bg-dark text-white"><h3 class="mb-0">Update Package Status</h3></div>
@@ -48,10 +46,8 @@
             </div>
         </div>
     </div>
-
     <!-- The hidden iframe that handles the submission -->
     <iframe name="hidden_iframe" id="hidden_iframe" style="display: none;"></iframe>
-
     <script src="admin-script.js"></script>
 </body>
 </html>
