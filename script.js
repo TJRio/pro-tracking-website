@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // !!! IMPORTANT: REPLACE WITH YOUR PositionStack API KEY !!!
-        const geoApiKey = 'b6409a80dd70b07e3299b7050642b6ab';
+        const geoApiKey = '9948205a702f123424ebbc0a480abb16';
         const geoApiUrl = `https://api.positionstack.com/v1/forward?access_key=${geoApiKey}&query=${encodeURIComponent(locationName)}`;
 
         fetch(geoApiUrl)
@@ -192,5 +192,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .bindPopup(`<b>${locationName}</b>`)
             .openPopup();
     }
+
 
 }); // End of DOMContentLoaded
