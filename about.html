@@ -4,147 +4,446 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - SwiftShip Logistics</title>
+    
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="style.css">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           CUSTOM CSS (Consistent with Home)
+           ========================================= */
+        :root {
+            --primary-color: #0E1D34;    /* Deep Navy Blue */
+            --secondary-color: #d96c2c;  /* Logistics Orange */
+            --light-bg: #f4f7fa;
+            --text-color: #555;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        /* --- Top Bar & Nav (Same as Home) --- */
+        .top-bar {
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .top-bar i { margin-right: 6px; color: var(--secondary-color); }
+        .social-links a { color: #fff; margin-left: 15px; transition: 0.3s; }
+        .social-links a:hover { color: var(--secondary-color); }
+
+        .navbar {
+            background-color: var(--white);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+        .navbar-brand img { max-height: 55px; }
+        .nav-link {
+            color: var(--primary-color) !important;
+            font-weight: 500;
+            margin-left: 15px;
+            transition: 0.3s;
+        }
+        .nav-link:hover, .nav-link.active { color: var(--secondary-color) !important; }
+        .btn-quote {
+            background-color: var(--secondary-color);
+            color: #fff !important;
+            border-radius: 4px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-quote:hover { background-color: #b85921; transform: translateY(-2px); }
+
+        /* --- Page Header (Specific to inner pages) --- */
+        .page-header {
+            background: linear-gradient(rgba(14, 29, 52, 0.8), rgba(14, 29, 52, 0.8)), url('assets/img/page-header-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0 80px 0;
+            color: white;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .breadcrumb-item a { color: var(--secondary-color); text-decoration: none; }
+        .breadcrumb-item.active { color: #ccc; }
+
+        /* --- About Content --- */
+        .section-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 3px;
+            background: var(--secondary-color);
+            bottom: 0;
+            left: 0;
+        }
+        .section-title.text-center::after { left: 50%; transform: translateX(-50%); }
+        
+        .sub-title { 
+            color: var(--secondary-color); 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            font-size: 0.9rem; 
+            display: block; 
+            margin-bottom: 10px; 
+        }
+
+        .about-image-stack { position: relative; padding-bottom: 40px; }
+        .about-image-stack img { border-radius: 5px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .year-badge {
+            position: absolute;
+            bottom: 0;
+            right: 20px;
+            background: var(--secondary-color);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border: 5px solid white;
+            border-radius: 5px;
+        }
+        .year-badge span { font-size: 3rem; font-weight: 700; line-height: 1; display: block; }
+
+        /* --- Stats Counter Section --- */
+        .stats-section {
+            background-color: var(--primary-color);
+            padding: 80px 0;
+            color: white;
+            margin: 80px 0;
+        }
+        .stat-item i { font-size: 3rem; color: var(--secondary-color); margin-bottom: 15px; display: block; }
+        .stat-item h3 { font-size: 2.5rem; font-weight: 700; }
+        .stat-item p { opacity: 0.8; margin-bottom: 0; }
+
+        /* --- Values Cards --- */
+        .value-card {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            height: 100%;
+            border-bottom: 3px solid transparent;
+        }
+        .value-card:hover { transform: translateY(-10px); border-bottom-color: var(--secondary-color); }
+        .value-card i { font-size: 2.5rem; color: var(--secondary-color); margin-bottom: 20px; display: inline-block; }
+
+        /* --- Team (Same as Home) --- */
+        .team-member { position: relative; overflow: hidden; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .team-member img { width: 100%; transition: 0.5s; }
+        .team-member:hover img { transform: scale(1.1); }
+        .team-overlay {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            background: linear-gradient(to top, var(--primary-color), transparent);
+            padding: 20px; text-align: center; color: white;
+        }
+
+        /* --- Footer (Same as Home) --- */
+        .site-footer { background: var(--primary-color); color: #b0b9c6; font-size: 0.95rem; }
+        .site-footer h4 { color: white; font-weight: 600; margin-bottom: 25px; position: relative; padding-bottom: 10px; }
+        .site-footer h4::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 2px; background: var(--secondary-color); }
+        .footer-links a { color: #b0b9c6; text-decoration: none; display: block; margin-bottom: 12px; transition: 0.3s; }
+        .footer-links a:hover { color: var(--secondary-color); padding-left: 8px; }
+        .copyright { background: #091424; padding: 25px 0; border-top: 1px solid rgba(255,255,255,0.05); }
+    </style>
 </head>
 <body>
 
-    <!-- Header & Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <!-- Top Bar -->
+    <div class="top-bar d-none d-lg-block">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="contact-info d-flex gap-4">
+                <span><i class="bi bi-envelope-fill"></i> swiftship.logistics01@gmail.com</span>
+                <span><i class="bi bi-telephone-fill"></i> +1 210 201 4903</span>
+                <span><i class="bi bi-clock-fill"></i> Mon - Sat: 8:00 - 18:00</span>
+            </div>
+            <div class="social-links">
+                <a href="#"><i class="bi bi-twitter"></i></a>
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <img src="assets/img/logo.png" alt="SwiftShip Logistics Logo">
+                <img src="assets/img/logo.png" alt="SwiftShip Logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link active" href="about.html">About Us</a></li>
                     <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-primary text-white ms-lg-2 px-3" href="tracking.html">Track Package</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a class="btn btn-quote" href="contact.html">Get A Quote</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- Page Header -->
-    <header class="page-header text-center">
-        <div class="container">
-            <h1 class="display-4 fw-bold">About SwiftShip Logistics</h1>
-            <p class="lead">Connecting the world, one package at a time.</p>
+    <header class="page-header">
+        <div class="container" data-aos="fade-up">
+            <h1 class="display-3 fw-bold mb-3">About Our Company</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center text-uppercase">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">About Us</li>
+                </ol>
+            </nav>
         </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="standard-page-content">
-        <div class="container">
-            <!-- Our Story Section -->
-            <section class="mb-5">
+    <main>
+        <!-- Main About Story Section -->
+        <section class="py-5">
+            <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-lg-5 animate-on-scroll">
-                        <h2 class="section-title mb-4">Our Story</h2>
-                        <p class="text-muted">Founded in 2015, SwiftShip Logistics started with a simple mission: to empower local producers and artisans by connecting them to the global market. We specialize in creating reliable, transparent, and accessible shipping routes for businesses of all sizes, from bustling city markets to remote agricultural communities.</p>
-                        <p class="text-muted">Our growth is fueled by a deep commitment to the communities we serve. We believe that every package carries not just a product, but a story of hard work and ambition. It's our privilege to ensure that story reaches its destination.</p>
-                    </div>
-                    <div class="col-lg-7 animate-on-scroll">
-                        <!-- MASONRY GALLERY START - Change the src paths below to your own images -->
-                        <div class="masonry-gallery">
-                            <div class="masonry-item">
-                                <img src="assets/img/your-image-1.jpg" alt="A short description of your first image">
-                            </div>
-                            <div class="masonry-item">
-                                <img src="assets/img/your-image-2.jpg" alt="A short description of your second image">
-                            </div>
-                            <div class="masonry-item">
-                                <img src="assets/img/your-image-3.jpg" alt="A short description of your third image">
-                            </div>
-                            <div class="masonry-item">
-                                <img src="assets/img/your-image-5.jpg" alt="A short description of your fifth image">
-                            </div>
-                            <div class="masonry-item">
-                                <img src="assets/img/your-image-6.jpg" alt="A short description of your sixth image">
-                            </div>
-                            <div class="masonry-item">
-                                <img src="assets/img/your-image-7.jpg" alt="A short description of your sixth image">
-                            </div>
-                            <div class="masonry-item">
-                                <img src="assets/img/your-image-8.jpg" alt="A short description of your sixth image">
-                            </div>
-                            <div class="masonry-item">
-                                <img src="assets/img/your-image-9.jpg" alt="A short description of your sixth image">
-                            </div>
-                            <div class="masonry-item">
-                                <img src="assets/img/your-image-10.jpg" alt="A short description of your sixth image">
+                    <!-- Image Side -->
+                    <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+                        <div class="about-image-stack">
+                            <!-- Ensure you have 'about-main.jpg' -->
+                            <img src="assets/img/about-main.jpg" class="img-fluid w-100" alt="Logistics Warehouse">
+                            <div class="year-badge">
+                                <span>25+</span>
+                                Years Experience
                             </div>
                         </div>
-                        <!-- MASONRY GALLERY END -->
+                    </div>
+                    <!-- Text Side -->
+                    <div class="col-lg-6 ps-lg-5" data-aos="fade-left">
+                        <span class="sub-title">Who We Are</span>
+                        <h2 class="section-title mb-4">Reliable & Safe Logistic Provider Since 1999</h2>
+                        <p class="text-muted lead mb-4">Connecting the world, one package at a time with precision and care.</p>
+                        <p class="text-muted mb-4">Founded in 1999, SwiftShip Logistics started with a simple mission: to empower local producers and artisans by connecting them to the global market. Today, we specialize in creating reliable, transparent, and accessible shipping routes for businesses of all sizes.</p>
+                        <p class="text-muted">Our growth is fueled by a deep commitment to the communities we serve. We believe that every package carries not just a product, but a story of hard work and ambition.</p>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-primary fs-4 me-3"></i>
+                                    <h6 class="mb-0 fw-bold">Certified Company</h6>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-primary fs-4 me-3"></i>
+                                    <h6 class="mb-0 fw-bold">Expert Team</h6>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <a href="contact.html" class="btn btn-primary mt-4 px-4 py-2" style="background-color: var(--primary-color);">Contact Us</a>
                     </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            <!-- Our Values Section -->
-            <section class="py-5 bg-white rounded animate-on-scroll">
-                <div class="container text-center">
-                    <h2 class="section-title mb-5">Our Core Values</h2>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <i class="bi bi-person-check-fill display-4 text-primary"></i>
-                            <h4 class="mt-3">Customer First</h4>
-                            <p class="text-muted">Your success is our success. We are dedicated to providing responsive and proactive support.</p>
+        <!-- Stats Counter Strip -->
+        <section class="stats-section" data-aos="fade-up">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-3 col-6 mb-4 mb-md-0">
+                        <div class="stat-item">
+                            <i class="bi bi-box-seam"></i>
+                            <h3>8,500+</h3>
+                            <p>Project Completed</p>
                         </div>
-                        <div class="col-md-4">
-                            <i class="bi bi-lightbulb-fill display-4 text-primary"></i>
-                            <h4 class="mt-3">Innovation</h4>
-                            <p class="text-muted">We continuously invest in technology to provide you with the most advanced and efficient logistics solutions.</p>
+                    </div>
+                    <div class="col-md-3 col-6 mb-4 mb-md-0">
+                        <div class="stat-item">
+                            <i class="bi bi-emoji-smile"></i>
+                            <h3>3,200+</h3>
+                            <p>Satisfied Clients</p>
                         </div>
-                        <div class="col-md-4">
-                            <i class="bi bi-gem display-4 text-primary"></i>
-                            <h4 class="mt-3">Integrity</h4>
-                            <p class="text-muted">We operate with honesty and transparency. You can trust us to handle your shipments with the highest ethical standards.</p>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-item">
+                            <i class="bi bi-trophy"></i>
+                            <h3>120+</h3>
+                            <p>Awards Won</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-item">
+                            <i class="bi bi-people"></i>
+                            <h3>180+</h3>
+                            <p>Expert Workers</p>
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
+
+        <!-- Core Values Section -->
+        <section class="py-5 bg-light">
+            <div class="container py-5">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <span class="sub-title">Our Values</span>
+                    <h2 class="section-title text-center">Why Choose Us</h2>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="value-card text-center">
+                            <i class="bi bi-person-check-fill"></i>
+                            <h4>Customer First</h4>
+                            <p class="text-muted">Your success is our success. We are dedicated to providing responsive and proactive support to ensure your shipments arrive safely.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="value-card text-center">
+                            <i class="bi bi-lightbulb-fill"></i>
+                            <h4>Innovation</h4>
+                            <p class="text-muted">We continuously invest in technology to provide you with the most advanced, real-time tracking and efficient logistics solutions.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                        <div class="value-card text-center">
+                            <i class="bi bi-gem"></i>
+                            <h4>Integrity</h4>
+                            <p class="text-muted">We operate with honesty and transparency. You can trust us to handle your shipments with the highest ethical standards and security.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section (Reused for consistency) -->
+        <section class="py-5">
+            <div class="container py-5">
+                <div class="text-center mb-5" data-aos="fade-up">
+                    <span class="sub-title">Our Team</span>
+                    <h2 class="section-title text-center">Meet The Executive Panel</h2>
+                </div>
+                
+                <div class="row g-4">
+                    <div class="col-md-3 col-sm-6" data-aos="fade-up">
+                        <div class="team-member">
+                            <img src="assets/img/team-1.jpg" alt="Team Member">
+                            <div class="team-overlay">
+                                <h5>Sarah Johnson</h5>
+                                <small>Head of Operations</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="100">
+                        <div class="team-member">
+                            <img src="assets/img/team-2.jpg" alt="Team Member">
+                            <div class="team-overlay">
+                                <h5>David Smith</h5>
+                                <small>Transport Manager</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="200">
+                        <div class="team-member">
+                            <img src="assets/img/team-3.jpg" alt="Team Member">
+                            <div class="team-overlay">
+                                <h5>Emily Davis</h5>
+                                <small>Customer Lead</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6" data-aos="fade-up" data-aos-delay="300">
+                        <div class="team-member">
+                            <img src="assets/img/team-4.jpg" alt="Team Member">
+                            <div class="team-overlay">
+                                <h5>Michael Brown</h5>
+                                <small>Logistics Engineer</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
     
     <!-- Footer -->
-    <footer class="site-footer pt-5 pb-4">
-        <div class="container text-center text-md-start">
-            <div class="row">
-                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
-                    <h6 class="text-uppercase fw-bold"><img src="assets/img/logo.png" alt="SwiftShip Logistics Logo"> SwiftShip Logistics</h6>
-                    <hr class="mb-4 mt-2 hr-primary"/>
-                    <p>Your trusted partner in global logistics. We provide fast, secure, and reliable shipping solutions tailored to your needs.</p>
+    <footer class="site-footer pt-5">
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-4">SwiftShip Logistics</h4>
+                    <p class="mb-4">Providing top-tier logistics solutions for over 20 years. We are dedicated to safety, speed, and reliability connecting every corner of the globe.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white bg-secondary bg-opacity-25 p-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-white bg-secondary bg-opacity-25 p-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white bg-secondary bg-opacity-25 p-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-linkedin"></i></a>
+                    </div>
                 </div>
-                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                    <h6 class="text-uppercase fw-bold">Quick Links</h6>
-                    <hr class="mb-4 mt-2 hr-primary"/>
-                    <p><a href="about.html" class="footer-link">About Us</a></p>
-                    <p><a href="services.html" class="footer-link">Services</a></p>
-                    <p><a href="tracking.html" class="footer-link">Track a Package</a></p>
-                    <p><a href="contact.html" class="footer-link">Contact Us</a></p>
+                <div class="col-lg-2 col-6 footer-links">
+                    <h4>Our Services</h4>
+                    <a href="#">Air Freight</a>
+                    <a href="#">Ocean Freight</a>
+                    <a href="#">Road Transport</a>
+                    <a href="#">Warehousing</a>
                 </div>
-                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-                    <h6 class="text-uppercase fw-bold">Contact</h6>
-                    <hr class="mb-4 mt-2 hr-primary"/>
-                    <p><i class="bi bi-geo-alt-fill me-3"></i> 123 Logistics Lane, New York, NY</p>
-                    <p><i class="bi bi-envelope-fill me-3"></i>swiftship.logistics01@gmail.com</p>
-                    <p><i class="bi bi-telephone-fill me-3"></i> +12102014903</p>
+                <div class="col-lg-2 col-6 footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="services.html">Services</a>
+                    <a href="tracking.html">Tracking</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h4>Contact Us</h4>
+                    <p><i class="bi bi-geo-alt-fill me-2 text-warning"></i> 123 Logistics Lane, New York, NY</p>
+                    <p><i class="bi bi-envelope-fill me-2 text-warning"></i> swiftship.logistics01@gmail.com</p>
+                    <p><i class="bi bi-telephone-fill me-2 text-warning"></i> +1 210 201 4903</p>
+                    
+                    <div class="input-group mt-4">
+                        <input type="text" class="form-control form-control-sm" placeholder="Your Email">
+                        <button class="btn btn-primary btn-sm" type="button"><i class="bi bi-send"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="copyright-bar text-center p-3 mt-4">
-            © 2025 Copyright:
-            <a class="text-white text-decoration-none fw-bold" href="index.html">SwiftShipLogistics.com</a>
+        <div class="copyright text-center">
+            <div class="container">
+                <small>&copy; 2025 SwiftShip Logistics. All Rights Reserved.</small>
+            </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="script.js"></script>
+
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
 </body>
 </html>

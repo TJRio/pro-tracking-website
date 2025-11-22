@@ -1,197 +1,211 @@
-// This is the complete and final script.js file with all features.
-
 document.addEventListener('DOMContentLoaded', function() {
+    
+    // --- GLOBAL VARIABLES ---
+    let map = null; // Global map instance
+    let currentMarker = null;
 
-    // --- Animation on Scroll Logic ---
+    // --- 1. ANIMATE ON SCROLL ---
     const observer = new IntersectionObserver(entries => {
         entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('is-visible');
-            }
+            if (entry.isIntersecting) entry.target.classList.add('is-visible');
         });
     });
-    const animatedElements = document.querySelectorAll('.animate-on-scroll');
-    animatedElements.forEach(element => {
-        observer.observe(element);
-    });
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
 
-    // --- Home Page Tracking Form Logic ---
+    // --- 2. TRACKING FORM LISTENER ---
     const trackingForm = document.getElementById('trackingForm');
     if (trackingForm) {
         trackingForm.addEventListener('submit', function(event) {
             event.preventDefault();
             const trackingInput = document.getElementById('trackingInput');
             const trackingNumber = trackingInput.value.trim();
+            
             if (trackingNumber) {
-                localStorage.setItem('trackingNumberToSearch', trackingNumber);
-                window.location.href = `tracking.html?id=${trackingNumber}`;
-            } else {
-                alert('Please enter a valid tracking number.');
+                // If we are on tracking.html, fetch directly
+                if (window.location.pathname.includes('tracking.html')) {
+                    resetUI();
+                    fetchTrackingData(trackingNumber);
+                } else {
+                    // If on home page, save and redirect
+                    localStorage.setItem('trackingNumberToSearch', trackingNumber);
+                    window.location.href = `tracking.html?id=${trackingNumber}`;
+                }
             }
         });
     }
 
-    // --- Tracking Results Page Logic ---
-    const resultsContainer = document.getElementById('tracking-results-container');
-    if (resultsContainer) {
-        // Create a URL object from the current page's URL
-        const urlParams = new URLSearchParams(window.location.search);
-        // Try to get the tracking ID from the URL (e.g., from ?id=PKG-123)
-        const trackingIdFromUrl = urlParams.get('id');
-        // Fallback to getting it from localStorage (old method, for safety)
-        const trackingIdFromStorage = localStorage.getItem('trackingNumberToSearch');
+    // --- 3. PAGE LOAD LOGIC ---
+    // Check if we should run tracking immediately (URL param or LocalStorage)
+    const urlParams = new URLSearchParams(window.location.search);
+    const trackingIdFromUrl = urlParams.get('id');
+    const trackingIdFromStorage = localStorage.getItem('trackingNumberToSearch');
+    const trackingNumber = trackingIdFromUrl || trackingIdFromStorage;
 
-        // Decide which tracking number to use: URL is priority
-        const trackingNumber = trackingIdFromUrl || trackingIdFromStorage;
-
-        if (trackingNumber) {
-            // Clear storage so it doesn't interfere with future link clicks
-            localStorage.removeItem('trackingNumberToSearch'); 
-            fetchTrackingData(trackingNumber);
-        } else {
-            // If no ID is found in the URL or storage, show an error.
-            showError();
-        }
+    if (trackingNumber && document.getElementById('results-content')) {
+        localStorage.removeItem('trackingNumberToSearch'); 
+        // Fill the search box
+        const input = document.getElementById('trackingInput');
+        if(input) input.value = trackingNumber;
+        
+        resetUI();
+        fetchTrackingData(trackingNumber);
     }
 
-    function fetchTrackingData(trackingNumber) {
-        // !!! IMPORTANT: REPLACE WITH YOUR SheetDB API URL !!!
-        const apiUrl = `https://sheetdb.io/api/v1/4v9hnyzvha1st/search?TrackingNumber=${trackingNumber}`;
+    // --- 4. FETCH DATA (SheetDB) ---
+    function fetchTrackingData(id) {
+        // Show Spinner
+        document.getElementById('loading-spinner').classList.remove('d-none');
+        
+        // YOUR API URL
+        const apiUrl = `https://sheetdb.io/api/v1/4v9hnyzvha1st/search?TrackingNumber=${id}`;
 
         fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
+                document.getElementById('loading-spinner').classList.add('d-none');
                 if (data.length > 0) {
-                    displayTrackingResults(data[0]);
+                    updateDashboard(data[0]);
                 } else {
                     showError();
                 }
             })
             .catch(error => {
-                console.error('SheetDB API Error:', error);
+                console.error('API Error:', error);
+                document.getElementById('loading-spinner').classList.add('d-none');
                 showError();
             });
     }
 
-    function displayTrackingResults(data) {
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const resultsContent = document.getElementById('results-content');
+    // --- 5. UPDATE DASHBOARD UI ---
+    function updateDashboard(data) {
+        const results = document.getElementById('results-content');
+        const errorMsg = document.getElementById('error-message');
         
+        // Hide Error, Show Results
+        errorMsg.classList.add('d-none');
+        results.classList.remove('d-none');
+
+        // 1. Update Header Info
+        document.getElementById('res-id').textContent = data.TrackingNumber;
+        document.getElementById('res-status').textContent = data.StatusText;
+        document.getElementById('res-eta').textContent = data.ETA || 'Pending';
+        document.getElementById('map-loc-name').textContent = data.CurrentLocation;
+        
+        // 2. Calculate Progress
         const status = data.StatusText.toLowerCase();
         let progress = 10;
-        if (status.includes('in transit')) progress = 50;
-        if (status.includes('out for delivery')) progress = 75;
-        if (status.includes('delivered') || status.includes('completed')) progress = 100;
-        
+        if (status.includes('transit')) progress = 50;
+        if (status.includes('out')) progress = 75;
+        if (status.includes('delivered')) progress = 100;
+        document.getElementById('res-progress').style.width = `${progress}%`;
+
+        // 3. Generate Timeline
+        const timelineContainer = document.getElementById('timeline-container');
+        timelineContainer.innerHTML = ''; // Clear old
+
         const historyEvents = data.History.split('|').map(item => item.trim());
-        const currentStatusIndex = historyEvents.findIndex(event => event.toLowerCase() === data.StatusText.toLowerCase());
+        // Simple logic: Assumes the LAST item in the list is the most recent
+        // Adjust this index logic if your sheet order is reversed
+        
+        historyEvents.forEach((eventText, index) => {
+            const li = document.createElement('li');
+            
+            // Determine state based on position in array
+            // (This is a simplification, usually you compare dates)
+            let stateClass = 'incomplete'; 
+            if (index === 0) stateClass = 'active'; // Top item is active
+            else stateClass = 'completed';
 
-        const historyItems = historyEvents.map((item, index) => {
-            let stateClass = 'incomplete';
-            if (index < currentStatusIndex) {
-                stateClass = 'completed';
-            } else if (index === currentStatusIndex) {
-                stateClass = 'active';
-            }
             const iconContent = (stateClass === 'completed') ? '<i class="bi bi-check"></i>' : '';
-            return `
-                <li class="timeline-item ${stateClass}">
-                    <div class="timeline-icon">${iconContent}</div>
-                    <div class="timeline-body">${item}</div>
-                </li>
+            
+            li.className = `timeline-item ${stateClass}`;
+            li.innerHTML = `
+                <div class="timeline-icon">${iconContent}</div>
+                <div class="timeline-body">${eventText}</div>
             `;
-        }).join('');
+            timelineContainer.appendChild(li);
+        });
 
-        const resultsHTML = `
-            <div class="card shadow-lg">
-                <div class="card-header bg-dark text-white">
-                    <h3 class="mb-0">Tracking ID: ${data.TrackingNumber}</h3>
-                </div>
-                <div class="card-body p-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h4>Current Status: <span class="text-primary">${data.StatusText}</span></h4>
-                            <p class="lead"><strong>Location:</strong> ${data.CurrentLocation}</p>
-                            <p class="lead"><strong>Estimated Delivery:</strong> ${data.ETA}</p>
-                        </div>
-                        <div class="col-md-6 align-self-center">
-                            <div class="progress" style="height: 25px;">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: ${progress}%" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100">${progress}%</div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr class="my-4">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h4>Shipment History</h4>
-                            <ul class="timeline">${historyItems}</ul>
-                        </div>
-                        <div class="col-md-6">
-                            <h4>Current Location Map</h4>
-                            <div id="tracking-map" style="height: 300px; border-radius: 8px;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        resultsContent.innerHTML = resultsHTML;
-        loadingSpinner.classList.add('d-none');
-        resultsContent.classList.remove('d-none');
-        
+        // 4. Show Map Widget
+        document.getElementById('map-widget').style.display = 'block';
+
+        // 5. Initialize Map
         initializeMap(data);
     }
 
-    function showError() {
-        const loadingSpinner = document.getElementById('loading-spinner');
-        const errorMessage = document.getElementById('error-message');
-        loadingSpinner.classList.add('d-none');
-        errorMessage.classList.remove('d-none');
-    }
-
+    // --- 6. MAP LOGIC ---
     function initializeMap(data) {
-        const mapContainer = document.getElementById('tracking-map');
         const locationName = data.CurrentLocation;
+        
+        // Ensure container exists
+        if (!document.getElementById('tracking-map')) return;
 
+        // Helper to Create Map
+        const drawMap = (lat, lng) => {
+            // Remove old map if exists to prevent error
+            if (map !== null) {
+                map.remove();
+                map = null;
+            }
+
+            // Create new map
+            map = L.map('tracking-map').setView([lat, lng], 13);
+
+            // Use "Light" tiles for Pro look
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; CARTO',
+                subdomains: 'abcd',
+                maxZoom: 20
+            }).addTo(map);
+
+            // Custom Marker
+            const truckIcon = L.icon({
+                iconUrl: 'https://cdn-icons-png.flaticon.com/512/713/713311.png',
+                iconSize: [38, 38],
+                iconAnchor: [19, 19],
+                popupAnchor: [0, -20]
+            });
+
+            L.marker([lat, lng], {icon: truckIcon}).addTo(map)
+                .bindPopup(`<b>${data.StatusText}</b><br>${locationName}`)
+                .openPopup();
+                
+            // Force resize calculation after a small delay
+            setTimeout(() => { map.invalidateSize(); }, 200);
+        };
+
+        // Logic: Check Coordinates first, then Geocode
         if (data.MapCoordinates && data.MapCoordinates.includes(',')) {
             try {
                 const [lat, lon] = data.MapCoordinates.split(',').map(Number);
-                createMap([lat, lon], locationName);
-                return;
-            } catch (error) {
-                console.error("Invalid coordinates in sheet:", error);
-            }
+                drawMap(lat, lon);
+            } catch (e) { console.error('Coord parse error', e); }
+        } else {
+            // Geocode Fallback
+            const geoApiKey = '9948205a702f123424ebbc0a480abb16'; // Your Key
+            const geoApiUrl = `https://api.positionstack.com/v1/forward?access_key=${geoApiKey}&query=${encodeURIComponent(locationName)}`;
+
+            fetch(geoApiUrl)
+                .then(res => res.json())
+                .then(geoData => {
+                    if (geoData.data && geoData.data.length > 0) {
+                        drawMap(geoData.data[0].latitude, geoData.data[0].longitude);
+                    }
+                })
+                .catch(err => console.error("Geocode Error", err));
         }
-
-        // !!! IMPORTANT: REPLACE WITH YOUR PositionStack API KEY !!!
-        const geoApiKey = '9948205a702f123424ebbc0a480abb16';
-        const geoApiUrl = `https://api.positionstack.com/v1/forward?access_key=${geoApiKey}&query=${encodeURIComponent(locationName)}`;
-
-        fetch(geoApiUrl)
-            .then(response => response.json())
-            .then(geoData => {
-                if (geoData.data && geoData.data.length > 0) {
-                    const { latitude, longitude } = geoData.data[0];
-                    createMap([latitude, longitude], locationName);
-                } else {
-                    throw new Error('No results found for location.');
-                }
-            })
-            .catch(error => {
-                console.error("Geocoding API Error:", error);
-                mapContainer.innerHTML = `<p class="text-danger p-3">Could not find location: "${locationName}" on the map.</p>`;
-            });
     }
 
-    function createMap(coords, locationName) {
-        const map = L.map('tracking-map').setView(coords, 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-        L.marker(coords).addTo(map)
-            .bindPopup(`<b>${locationName}</b>`)
-            .openPopup();
+    // --- HELPER FUNCTIONS ---
+    function resetUI() {
+        document.getElementById('results-content').classList.add('d-none');
+        document.getElementById('error-message').classList.add('d-none');
+        document.getElementById('map-widget').style.display = 'none';
     }
 
+    function showError() {
+        document.getElementById('error-message').classList.remove('d-none');
+        document.getElementById('results-content').classList.add('d-none');
+    }
 
-}); // End of DOMContentLoaded
+});

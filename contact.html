@@ -4,141 +4,334 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - SwiftShip Logistics</title>
+    
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="style.css">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* =========================================
+           CUSTOM CSS (Consistent Theme)
+           ========================================= */
+        :root {
+            --primary-color: #0E1D34;    /* Deep Navy Blue */
+            --secondary-color: #d96c2c;  /* Logistics Orange */
+            --light-bg: #f4f7fa;
+            --text-color: #555;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            background-color: var(--light-bg);
+            overflow-x: hidden;
+        }
+
+        /* --- Navigation --- */
+        .top-bar {
+            background: var(--primary-color);
+            color: #fff;
+            font-size: 0.85rem;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .top-bar i { margin-right: 6px; color: var(--secondary-color); }
+        .social-links a { color: #fff; margin-left: 15px; transition: 0.3s; }
+        .social-links a:hover { color: var(--secondary-color); }
+
+        .navbar {
+            background-color: var(--white);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+        .navbar-brand img { max-height: 55px; }
+        .nav-link {
+            color: var(--primary-color) !important;
+            font-weight: 500;
+            margin-left: 15px;
+            transition: 0.3s;
+        }
+        .nav-link:hover, .nav-link.active { color: var(--secondary-color) !important; }
+        .btn-quote {
+            background-color: var(--secondary-color);
+            color: #fff !important;
+            border-radius: 4px;
+            padding: 10px 25px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn-quote:hover { background-color: #b85921; transform: translateY(-2px); }
+
+        /* --- Page Header --- */
+        .page-header {
+            background: linear-gradient(rgba(14, 29, 52, 0.8), rgba(14, 29, 52, 0.8)), url('assets/img/page-header-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            padding: 120px 0 80px 0;
+            color: white;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .breadcrumb-item a { color: var(--secondary-color); text-decoration: none; }
+        .breadcrumb-item.active { color: #ccc; }
+
+        /* --- Contact Info Cards --- */
+        .contact-info-card {
+            background: white;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            transition: 0.3s;
+            height: 100%;
+            border-bottom: 3px solid transparent;
+        }
+        .contact-info-card:hover {
+            transform: translateY(-10px);
+            border-bottom-color: var(--secondary-color);
+        }
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background: #fff4ee;
+            color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+            transition: 0.3s;
+        }
+        .contact-info-card:hover .icon-box {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        /* --- Form Styling --- */
+        .contact-form-wrapper {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .form-control {
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            background-color: #f8f9fa;
+            margin-bottom: 20px;
+        }
+        .form-control:focus {
+            box-shadow: none;
+            border-color: var(--secondary-color);
+            background-color: white;
+        }
+        
+        /* --- Map --- */
+        .map-container {
+            height: 100%;
+            min-height: 450px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* --- Footer --- */
+        .site-footer { background: var(--primary-color); color: #b0b9c6; font-size: 0.95rem; }
+        .site-footer h4 { color: white; font-weight: 600; margin-bottom: 25px; position: relative; padding-bottom: 10px; }
+        .site-footer h4::after { content: ''; position: absolute; left: 0; bottom: 0; width: 40px; height: 2px; background: var(--secondary-color); }
+        .footer-links a { color: #b0b9c6; text-decoration: none; display: block; margin-bottom: 12px; transition: 0.3s; }
+        .footer-links a:hover { color: var(--secondary-color); padding-left: 8px; }
+        .copyright { background: #091424; padding: 25px 0; border-top: 1px solid rgba(255,255,255,0.05); }
+    </style>
 </head>
 <body>
 
-    <!-- Header & Navigation Bar -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <!-- Top Bar -->
+    <div class="top-bar d-none d-lg-block">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="contact-info d-flex gap-4">
+                <span><i class="bi bi-envelope-fill"></i> swiftship.logistics01@gmail.com</span>
+                <span><i class="bi bi-telephone-fill"></i> +1 210 201 4903</span>
+                <span><i class="bi bi-clock-fill"></i> Mon - Sat: 8:00 - 18:00</span>
+            </div>
+            <div class="social-links">
+                <a href="#"><i class="bi bi-twitter"></i></a>
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <img src="assets/img/logo.png" alt="SwiftShip Logistics Logo">
+                <img src="assets/img/logo.png" alt="SwiftShip Logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
                     <li class="nav-item"><a class="nav-link" href="services.html">Services</a></li>
-                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contact Us</a></li>
-                    <li class="nav-item"><a class="nav-link btn btn-primary text-white ms-lg-2 px-3" href="tracking.html">Track Package</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="contact.html">Contact</a></li>
+                    <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                        <a class="btn btn-quote" href="contact.html">Get A Quote</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
     <!-- Page Header -->
-    <header class="page-header text-center">
-        <div class="container">
-            <h1 class="display-4 fw-bold">Get in Touch</h1>
-            <p class="lead">We're here to help with all your logistics questions.</p>
+    <header class="page-header">
+        <div class="container" data-aos="fade-up">
+            <h1 class="display-3 fw-bold mb-3">Contact Us</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb justify-content-center text-uppercase">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">Contact</li>
+                </ol>
+            </nav>
         </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="standard-page-content">
-        <div class="container">
-            <div class="row g-5">
-                <!-- Left Column: Contact Info & Map -->
-                <div class="col-lg-6 animate-on-scroll">
-                    <h3 class="section-title mb-4">Contact Information</h3>
-                    <div class="d-flex mb-3 align-items-center">
-                        <i class="bi bi-geo-alt-fill text-primary fs-4 me-3"></i>
-                        <div>
-                            <strong>Address:</strong><br>
-                            123 Logistics Lane, New York, NY 10001, US
+    <main>
+        <!-- Contact Info Cards -->
+        <section class="mb-5" style="margin-top: -100px; position: relative; z-index: 2;">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                        <div class="contact-info-card">
+                            <div class="icon-box"><i class="bi bi-geo-alt"></i></div>
+                            <h4 class="fw-bold">Our Location</h4>
+                            <p class="text-muted">123 Logistics Lane, New York, NY 10001, United States</p>
                         </div>
                     </div>
-                    <div class="d-flex mb-3 align-items-center">
-                        <i class="bi bi-telephone-fill text-primary fs-4 me-3"></i>
-                        <div>
-                            <strong>Phone:</strong><br>
-                            + 01 234 567 88
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                        <div class="contact-info-card">
+                            <div class="icon-box"><i class="bi bi-envelope"></i></div>
+                            <h4 class="fw-bold">Email Address</h4>
+                            <p class="text-muted">swiftship.logistics01@gmail.com<br>support@swiftship.com</p>
                         </div>
                     </div>
-                    <div class="d-flex mb-4 align-items-center">
-                        <i class="bi bi-envelope-fill text-primary fs-4 me-3"></i>
-                        <div>
-                            <strong>Email:</strong><br>
-                            info@swiftship-logistics.com
+                    <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                        <div class="contact-info-card">
+                            <div class="icon-box"><i class="bi bi-telephone"></i></div>
+                            <h4 class="fw-bold">Phone Number</h4>
+                            <p class="text-muted">+1 210 201 4903<br>+1 987 654 3210</p>
                         </div>
-                    </div>
-
-                    <!-- Embedded Google Map -->
-                    <div class="ratio ratio-16x9 rounded shadow">
-                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.622971217035!2d-74.00882048459388!3d40.7484409793279!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259d6b3c5d6c7%3A0x8a4a4df65f5a5a2d!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1672955253860!5m2!1sen!2sus" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                    </div>
-                </div>
-
-                <!-- Right Column: Contact Form -->
-                <div class="col-lg-6 animate-on-scroll">
-                    <div class="bg-white p-4 p-md-5 rounded shadow-lg">
-                        <h3 class="section-title mb-4">Send Us a Message</h3>
-                        
-                        <!-- !!! IMPORTANT: PASTE YOUR FORMSPREE URL IN THE 'action' ATTRIBUTE BELOW !!! -->
-                        <form action="https://formspree.io/f/xpwljyon" method="POST">
-                            <div class="mb-3">
-                                <label for="contact-name" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="contact-name" name="name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="contact-email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="contact-email" name="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="contact-subject" class="form-label">Subject</label>
-                                <input type="text" class="form-control" id="contact-subject" name="subject" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="contact-message" class="form-label">Message</label>
-                                <textarea class="form-control" id="contact-message" name="message" rows="5" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 py-2">Send Message</button>
-                        </form>
-                        
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- Form & Map Section -->
+        <section class="py-5">
+            <div class="container mb-5">
+                <div class="row g-4">
+                    <!-- Contact Form -->
+                    <div class="col-lg-6" data-aos="fade-right">
+                        <div class="contact-form-wrapper h-100">
+                            <h5 class="text-secondary text-uppercase fw-bold small mb-2">Get In Touch</h5>
+                            <h2 class="fw-bold mb-4" style="color: var(--primary-color);">Send Us a Message</h2>
+                            <p class="text-muted mb-4">Have a question about shipping, tracking, or our services? Fill out the form below and our team will get back to you shortly.</p>
+                            
+                            <!-- Formspree Form -->
+                            <form action="https://formspree.io/f/xpwljyon" method="POST">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="name" placeholder="Your Name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="email" class="form-control" name="email" placeholder="Your Email" required>
+                                    </div>
+                                </div>
+                                <input type="text" class="form-control" name="subject" placeholder="Subject" required>
+                                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+                                <button type="submit" class="btn btn-primary w-100 py-3 fw-bold" style="background-color: var(--secondary-color); border: none;">SEND MESSAGE</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Google Map -->
+                    <div class="col-lg-6" data-aos="fade-left">
+                        <div class="map-container">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.622971217035!2d-74.00882048459388!3d40.7484409793279!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259d6b3c5d6c7%3A0x8a4a4df65f5a5a2d!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1672955253860!5m2!1sen!2sus" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
     
     <!-- Footer -->
-    <footer class="site-footer pt-5 pb-4">
-        <div class="container text-center text-md-start">
-            <div class="row">
-                <div class="col-md-4 col-lg-4 col-xl-4 mx-auto mb-4">
-                    <h6 class="text-uppercase fw-bold"><img src="assets/img/logo.png" alt="SwiftShip Logistics Logo"> SwiftShip Logistics</h6>
-                    <hr class="mb-4 mt-2 hr-primary"/>
-                    <p>Your trusted partner in global logistics. We provide fast, secure, and reliable shipping solutions tailored to your needs.</p>
+    <footer class="site-footer pt-5">
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-4">SwiftShip Logistics</h4>
+                    <p class="mb-4">Providing top-tier logistics solutions for over 20 years. We are dedicated to safety, speed, and reliability connecting every corner of the globe.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white bg-secondary bg-opacity-25 p-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-white bg-secondary bg-opacity-25 p-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-white bg-secondary bg-opacity-25 p-2 rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-linkedin"></i></a>
+                    </div>
                 </div>
-                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                    <h6 class="text-uppercase fw-bold">Quick Links</h6>
-                    <hr class="mb-4 mt-2 hr-primary"/>
-                    <p><a href="about.html" class="footer-link">About Us</a></p>
-                    <p><a href="services.html" class="footer-link">Services</a></p>
-                    <p><a href="tracking.html" class="footer-link">Track a Package</a></p>
-                    <p><a href="contact.html" class="footer-link">Contact Us</a></p>
+                <div class="col-lg-2 col-6 footer-links">
+                    <h4>Our Services</h4>
+                    <a href="#">Air Freight</a>
+                    <a href="#">Ocean Freight</a>
+                    <a href="#">Road Transport</a>
+                    <a href="#">Warehousing</a>
                 </div>
-                <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-                    <h6 class="text-uppercase fw-bold">Contact</h6>
-                    <hr class="mb-4 mt-2 hr-primary"/>
-                    <p><i class="bi bi-geo-alt-fill me-3"></i> 123 Logistics Lane, New York, NY</p>
-                    <p><i class="bi bi-envelope-fill me-3"></i> info@swiftship-logistics.com</p>
-                    <p><i class="bi bi-telephone-fill me-3"></i> + 01 234 567 88</p>
+                <div class="col-lg-2 col-6 footer-links">
+                    <h4>Quick Links</h4>
+                    <a href="about.html">About Us</a>
+                    <a href="services.html">Services</a>
+                    <a href="tracking.html">Tracking</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h4>Contact Us</h4>
+                    <p><i class="bi bi-geo-alt-fill me-2 text-warning"></i> 123 Logistics Lane, New York, NY</p>
+                    <p><i class="bi bi-envelope-fill me-2 text-warning"></i> swiftship.logistics01@gmail.com</p>
+                    <p><i class="bi bi-telephone-fill me-2 text-warning"></i> +1 210 201 4903</p>
+                    
+                    <div class="input-group mt-4">
+                        <input type="text" class="form-control form-control-sm" placeholder="Your Email">
+                        <button class="btn btn-primary btn-sm" type="button"><i class="bi bi-send"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="copyright-bar text-center p-3 mt-4">
-            © 2025 Copyright:
-            <a class="text-white text-decoration-none fw-bold" href="index.html">SwiftShipLogistics.com</a>
+        <div class="copyright text-center">
+            <div class="container">
+                <small>&copy; 2025 SwiftShip Logistics. All Rights Reserved.</small>
+            </div>
         </div>
     </footer>
 
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="script.js"></script>
+
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
 </body>
 </html>
